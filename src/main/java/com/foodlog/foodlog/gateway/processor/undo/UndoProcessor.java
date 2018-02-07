@@ -33,16 +33,19 @@ public class UndoProcessor extends Processor{
     public void process() {
         JpaRepository repo = null;
         Long idToDelete = 0L;
-        Instant refDate = null;
+        Instant refDate = Instant.MIN;
 
-        String message = "";
+        String message = "Nada ";
+
 
         MealLog mealLog = mealLogRepository
             .findTop1ByUserOrderByMealDateTimeDesc(getCurrentUser(update));
-        repo = mealLogRepository;
-        idToDelete = mealLog.getId();
-        refDate = mealLog.getMealDateTime();
-        message = "Melalog ";
+        if(mealLog != null && mealLog.getMealDateTime().isAfter(refDate)){
+            repo = mealLogRepository;
+            idToDelete = mealLog.getId();
+            refDate = mealLog.getMealDateTime();
+            message = "MealLog ";
+        }
 
         Weight weight = weightRepository
             .findTop1ByUserOrderByWeightDateTimeDesc(getCurrentUser(update));
@@ -71,7 +74,9 @@ public class UndoProcessor extends Processor{
             message = "activity ";
         }
 
-        repo.delete(idToDelete);
+        if(repo != null) {
+            repo.delete(idToDelete);
+        }
 
         sendMessage(message + "removido");
     }
