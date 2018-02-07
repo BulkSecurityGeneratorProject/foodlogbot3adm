@@ -66,7 +66,7 @@ public class NewUserProcessor extends Processor {
     @Override
     public void process() {
 
-        String password = String.valueOf(new Random().nextInt(4));
+        String password = String.valueOf(new Random().nextInt() % 10000);
         User user = createUser(update.getMessage().getFrom().getFirst_name(),update.getMessage().getFrom().getLast_name(), password);
         UserTelegram userTelegram = new UserTelegram();
         userTelegram.setTelegramId(update.getMessage().getFrom().getId());
