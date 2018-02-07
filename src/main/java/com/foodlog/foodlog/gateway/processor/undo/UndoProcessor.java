@@ -1,9 +1,11 @@
 package com.foodlog.foodlog.gateway.processor.undo;
 
+import com.foodlog.domain.Activity;
 import com.foodlog.domain.BodyLog;
 import com.foodlog.domain.MealLog;
 import com.foodlog.domain.Weight;
 import com.foodlog.foodlog.gateway.processor.Processor;
+import com.foodlog.repository.ActivityRepository;
 import com.foodlog.repository.BodyLogRepository;
 import com.foodlog.repository.MealLogRepository;
 import com.foodlog.repository.WeightRepository;
@@ -24,6 +26,8 @@ public class UndoProcessor extends Processor{
     BodyLogRepository bodyLogRepository;
     @Autowired
     WeightRepository weightRepository;
+    @Autowired
+    ActivityRepository activityRepository;
 
     @Override
     public void process() {
@@ -56,6 +60,15 @@ public class UndoProcessor extends Processor{
             idToDelete = bodyLog.getId();
             refDate = bodyLog.getBodyLogDatetime();
             message = "Bodylog ";
+        }
+
+        Activity activity = activityRepository
+            .findTop1ByUserOrderByActivityDatetimeDesc(getCurrentUser(update));
+        if(activity != null && activity.getActivitydatetime().isAfter(refDate)){
+            repo = activityRepository;
+            idToDelete = activity.getId();
+            refDate = activity.getActivitydatetime();
+            message = "activity ";
         }
 
         repo.delete(idToDelete);

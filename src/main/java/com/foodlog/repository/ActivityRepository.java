@@ -1,6 +1,7 @@
 package com.foodlog.repository;
 
 import com.foodlog.domain.Activity;
+import com.foodlog.domain.User;
 import org.springframework.stereotype.Repository;
 
 import org.springframework.data.jpa.repository.*;
@@ -17,4 +18,6 @@ public interface ActivityRepository extends JpaRepository<Activity, Long> {
     List<Activity> findByUserIsCurrentUser();
 
     Activity findTop1ByNameContaining(String s);
+
+    Activity findTop1ByUserOrderByActivityDatetimeDesc(User currentUser);
 }
