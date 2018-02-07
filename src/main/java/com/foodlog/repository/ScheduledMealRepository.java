@@ -1,6 +1,7 @@
 package com.foodlog.repository;
 
 import com.foodlog.domain.ScheduledMeal;
+import com.foodlog.domain.User;
 import org.springframework.stereotype.Repository;
 
 import org.springframework.data.jpa.repository.*;
@@ -16,4 +17,13 @@ public interface ScheduledMealRepository extends JpaRepository<ScheduledMeal, Lo
     @Query("select scheduled_meal from ScheduledMeal scheduled_meal where scheduled_meal.user.login = ?#{principal.username}")
     List<ScheduledMeal> findByUserIsCurrentUser();
 
+    List<ScheduledMeal> findByUser(User current);
+
+    List<ScheduledMeal> findByOrderByTargetTimeDesc();
+
+    List<ScheduledMeal> findByNameAndUser(String comment, User currentUser);
+
+    List<ScheduledMeal> findByUserOrderByTargetTime(User one);
+
+    List<ScheduledMeal> findByUserOrderByTargetTimeDesc(User currentUser);
 }
