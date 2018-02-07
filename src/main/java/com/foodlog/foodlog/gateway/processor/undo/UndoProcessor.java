@@ -63,7 +63,7 @@ public class UndoProcessor extends Processor{
         }
 
         Activity activity = activityRepository
-            .findTop1ByUserOrderByActivityDatetimeDesc(getCurrentUser(update));
+            .findTop1ByUserOrderByActivitydatetimeDesc(getCurrentUser(update));
         if(activity != null && activity.getActivitydatetime().isAfter(refDate)){
             repo = activityRepository;
             idToDelete = activity.getId();

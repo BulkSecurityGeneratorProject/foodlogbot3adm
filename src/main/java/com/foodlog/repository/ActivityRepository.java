@@ -19,5 +19,5 @@ public interface ActivityRepository extends JpaRepository<Activity, Long> {
 
     Activity findTop1ByNameContaining(String s);
 
-    Activity findTop1ByUserOrderByActivityDatetimeDesc(User currentUser);
+    Activity findTop1ByUserOrderByActivitydatetimeDesc(User currentUser);
 }
