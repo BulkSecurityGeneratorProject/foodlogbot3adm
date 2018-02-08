@@ -78,7 +78,7 @@
 
 </head>
 
-<body>
+<body style="width: 300px">
 
     <div>
     <!--
@@ -106,17 +106,17 @@
             <br style="clear: both;" />
 
         <div class="container-fluid"  ng-cloak ng-app="timelineApp" ng-controller="timelineCtrl">
-            <div class="row" >
-                <div ng-repeat="meallog in (correctMealLogs = (meallogs | orderBy:mealDateTime:true))" class="col-xs-4 xcol-xs-offset-2 col-sm-4 xcol-sm-offset-2 col-md-4 xcol-md-offset-2 col-lg-4 xcol-lg-offset-2" style="background-color:lavenderblush;">
+             <div>
+                <div ng-repeat="meallog in (correctMealLogs = (meallogs | orderBy:mealDateTime:true))"
+                     style="background-color:lavenderblush;">
                     <h3>{{meallog.scheduledMeal.name}}</h3>
                     <img ng-src="data:{{meallog.photoContentType}};base64,{{meallog.photo}}"  alt="mealLog image"/>
 
                     <h1 style="float: left;">{{calcDateDiff(correctMealLogs[$index].mealDateTime,correctMealLogs[$index -1].mealDateTime)}}
                     </h1>
                     <div style="float: right" class="mealLogRating" ng-class="'rating'+{{meallog.rating}}"></div>
-
-
                 </div>
+                <div class="clear:both"></div>
             </div>
 
         </div>
