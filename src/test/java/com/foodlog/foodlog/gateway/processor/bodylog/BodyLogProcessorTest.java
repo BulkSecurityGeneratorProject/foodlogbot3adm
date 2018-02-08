@@ -10,6 +10,7 @@ import com.foodlog.foodlog.util.TestUtil;
 import com.foodlog.foodlog.util.Util;
 import com.foodlog.repository.BodyLogRepository;
 import com.foodlog.repository.MealLogRepository;
+import com.foodlog.repository.UserTelegramRepository;
 import com.google.common.io.ByteStreams;
 import org.junit.After;
 import org.junit.Assert;
@@ -61,6 +62,9 @@ public class BodyLogProcessorTest {
     @Spy
     private Util utilMock;
 
+    @Autowired
+    private UserTelegramRepository userTelegramRepository;
+
     @Test
     public void processBody() throws Exception {
 
@@ -90,7 +94,9 @@ public class BodyLogProcessorTest {
         Assert.assertEquals(qtdBody + 1, bodyLogRepository.count());
         Assert.assertEquals(qtdMeal, mealLogRepository.count());
 
-        URL url = new URL("https://foodlogbotimagebatch.herokuapp.com/bodylog?userid=" + testUtil.getUser().getId());
+        Integer userTelegram = userTelegramRepository.findOneByUser(testUtil.getUser()).getTelegramId();
+        URL url = new URL("https://foodlogbotimagebatch.herokuapp.com/bodylog?userid=" + testUtil.getUser().getId() + "&usertelegram=" + userTelegram);
+
         Mockito.verify(utilMock, Mockito.times(1)).performHttpGet(Mockito.eq(url), Mockito.eq(testUtil.getUser().getLogin()));
 
     }

@@ -4,6 +4,7 @@ import com.foodlog.domain.User;
 import com.foodlog.domain.Weight;
 import com.foodlog.foodlog.gateway.processor.Processor;
 import com.foodlog.foodlog.util.Util;
+import com.foodlog.repository.UserTelegramRepository;
 import com.foodlog.repository.WeightRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -23,6 +24,9 @@ public class WeightProcessor extends Processor{
     @Autowired
     private Util util;
 
+    @Autowired
+    private UserTelegramRepository userTelegramRepository;
+
     @Override
     public void process() {
         Weight weight = new Weight();
@@ -39,7 +43,10 @@ public class WeightProcessor extends Processor{
         sendMessage("Peso (" + value + ") salvo com sucesso.");
 
         try {
-            util.performHttpGet(new URL("https://foodlogbotimagebatch.herokuapp.com/weight?userid=" + currentUser.getId()), currentUser.getLogin());
+            Integer userTelegram = userTelegramRepository.findOneByUser(getCurrentUser(update)).getTelegramId();
+            URL url = new URL("https://foodlogbotimagebatch.herokuapp.com/weight?userid=" + getCurrentUser(update).getId() + "&usertelegram=" + userTelegram);
+
+            util.performHttpGet(url, currentUser.getLogin());
         } catch (IOException e) {
             e.printStackTrace();
         }

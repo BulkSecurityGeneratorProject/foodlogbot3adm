@@ -2,6 +2,7 @@ package com.foodlog.foodlog.gateway.processor.evolution;
 
 import com.foodlog.foodlog.gateway.processor.Processor;
 import com.foodlog.foodlog.util.Util;
+import com.foodlog.repository.UserTelegramRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -17,12 +18,16 @@ public class EvolutionProcessor extends Processor {
     @Autowired
     private Util util;
 
+    @Autowired
+    private UserTelegramRepository userTelegramRepository;
+
     @Override
     public void process() {
         sendMessage("Sua evolution sera gerada...");
 
         try {
-            URL url = new URL("https://foodlogbotimagebatch.herokuapp.com/evolution?userid=" + getCurrentUser(update).getId());
+            Integer userTelegram = userTelegramRepository.findOneByUser(getCurrentUser(update)).getTelegramId();
+            URL url = new URL("https://foodlogbotimagebatch.herokuapp.com/evolution?userid=" + getCurrentUser(update).getId() + "&usertelegram=" + userTelegram);
 
             util.performHttpGet(url, getCurrentUser(update).getLogin());
         } catch (MalformedURLException e) {

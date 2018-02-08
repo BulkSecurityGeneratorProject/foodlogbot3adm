@@ -1,10 +1,12 @@
 package com.foodlog.foodlog.gateway.processor.bodylog;
 
 import com.foodlog.domain.BodyLog;
+import com.foodlog.domain.UserTelegram;
 import com.foodlog.foodlog.gateway.openCV.PeopleDetector;
 import com.foodlog.foodlog.gateway.processor.Processor;
 import com.foodlog.foodlog.util.Util;
 import com.foodlog.repository.BodyLogRepository;
+import com.foodlog.repository.UserTelegramRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -26,6 +28,9 @@ public class BodyLogProcessor extends Processor  {
 
     @Autowired
     private BodyLogRepository bodyLogRepository;
+
+    @Autowired
+    private UserTelegramRepository userTelegramRepository;
 
     private byte[] photo = null;
     private byte[] imagePeopleBytes = null;
@@ -57,7 +62,8 @@ public class BodyLogProcessor extends Processor  {
             sendMessage("Body Log salvo com sucesso. Vou mandar");
 
             try {
-                URL url = new URL("https://foodlogbotimagebatch.herokuapp.com/bodylog?userid=" + getCurrentUser(update).getId());
+                Integer userTelegram = userTelegramRepository.findOneByUser(getCurrentUser(update)).getTelegramId();
+                URL url = new URL("https://foodlogbotimagebatch.herokuapp.com/bodylog?userid=" + getCurrentUser(update).getId() + "&usertelegram=" + userTelegram);
                 util.performHttpGet(url, getCurrentUser(update).getLogin());
             } catch (MalformedURLException e) {
                 e.printStackTrace();
